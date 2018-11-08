@@ -9,7 +9,10 @@ module Spree
       # interface instead of requiring changes to the Rails envrionment file
       def self.init
         ActionMailer::Base.delivery_method = preferred_delivery_method
-        ActionMailer::Base.default_url_options[:host] ||= Spree::Store.current.url if Spree::Store.table_exists?
+        begin
+          ActionMailer::Base.default_url_options[:host] ||= Spree::Store.current.url if Spree::Store.table_exists?
+        rescue ActiveRecord::NoDatabaseError
+        end
       end
 
       def mail_server_settings
